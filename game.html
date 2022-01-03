@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Document</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        #full-screen-background-image {
+            z-index: -999;
+            min-height: 100%;
+            min-width: 1024px;
+            width: 100%;
+            height: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #wrapper {
+            position: relative;
+            width: 800px;
+            min-height: 400px;
+            margin: 100px auto;
+            color: #333;
+            
+            
+        }
+    </style>
+
+</head>
+
+<body>
+    <img src="/img/Mortal-Kombat-bg03-1024x576.jpg" alt="full screen background image" id="full-screen-background-image">
+    <div class="player" id="player">
+        <center>
+            <img src="/img/3fcce0f498febedba9d201aa330a3af0.jpg" alt="#" id="play" v-bind:style="{height: HP1 + 'px'}"><br>
+            <h2>{{HP1}}</h2>
+            <img src="/img/dragon.jpg" alt="#" id="monster" v-bind:style="{height:  HP2 + 'px '}"><br>
+            <h2>{{HP2}}</h2>
+
+            <h1 v-if="HP1 <= 0 && HP2 > 0"> Player Lose</h1>
+            <h1 v-if="HP2 <= 0 && HP1> 0">Player Win</h1>
+            <h1 v-if="HP1 <= 0 && HP2 <= 0">Tie</h1>
+
+            <button @click="c1()"  class="bg-primary" >Start</button>
+            <button v-if="HP1 > 0 && HP2 > 0" @click= "c2(3,10)"  class="bg-danger" >Attack </button>
+            <button v-if="Gate>=2 && HP1 > 0 && HP2 > 0" @click="c3(10,20)" class="bg-warning">Special Attack</button>
+           
+        
+        </center>
+    </div>
+</body>
+
+</html>
+
+<script>
+    var audio1 = new Audio('1.mp3')
+    var audio2 = new Audio('2.mp3')
+    var player = new Vue({
+        el: '#player',
+        data: {
+            HP1: 100, 
+            HP2: 100, 
+            Gate: 0, 
+        },
+        methods: {
+            c1:function(){
+                this.HP1 = 100;
+                this.HP2 = 100;
+                this.Gate = 0;
+            },
+            c2:function(min,max){
+                var ranPLA = Math.max(Math.floor(Math.random() * max) + 1, min);
+                var ranMON = Math.max(Math.floor(Math.random() * 15) + 1, 5);
+                audio1.play()
+                this.HP2 -= ranPLA;
+                this.Gate += 1;
+                var vm = this;
+                setTimeout(function () { vm.HP1 -= ranMON; }, 500);
+            },
+            c3:function(min,max){
+                var randomNum = Math.max(Math.floor(Math.random() * max) + 1, min);
+                var randomMon = Math.max(Math.floor(Math.random() * 15) + 1, 5);
+                audio2.play()
+                this.HP2 -= randomNum;
+                this.Gate = 0;
+                var vm = this;
+                setTimeout(function () { vm.HP1 -= randomMon; }, 500);
+            }
+        },
+    })
+</script>
